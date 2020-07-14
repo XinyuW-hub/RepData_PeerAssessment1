@@ -132,6 +132,111 @@ paste("The interval", intervalMax, "contains the maximum number of steps")
 
 ## Imputing missing values
 
+**Note** that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
+1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+
+```{r calNA, echo=TRUE}
+
+calNA <- activity[which(is.na(activity$steps)), ]
+calNA <- nrow(calNA)
+
+paste("There are", calNA, "missing values in the data set.")
+```
+
+2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+**Note**: I decided to fill in all of the missing values in the data set with mean for the 5-minute interval.
+
+```{r fillNA, echo=TRUE}
+stepsPerInterval <- plot2Data
+newData <- read.csv("activity.csv")
+
+#fill in the missing values with average steps per interval
+for(i in 1:nrow(newData)){
+        if (is.na(newData[i, ]$steps)){
+                newData[i, ]$steps <- stepsPerInterval[i, ]$steps
+        }
+}
+
+```
+
+3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+```{r showNewData, echo=TRUE}
+opts_chunk$set(warning = FALSE)
+
+#show the new data generated above
+newData$date <- as.POSIXct(newData$date, "%Y-%m%d")
+head(newData,6)
+
+```
+
+
+4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+```{r plot3.png, echo=TRUE}
+plot3Data <- aggregate(steps~date, data = newData, sum)
+#create and export the histogram
+png("plot3.png")
+hist(plot3Data$steps, col = "steelblue", xlab = "Total daily number of steps", main = "Histogram of Total Daily Number of Steps")
+dev.off()
+#to show the plot here
+hist(plot3Data$steps, col = "steelblue", xlab = "Total daily number of steps", main = "Histogram of Total Daily Number of Steps")
+```
+
+Here are the mean and median of the total daily number of steps.
+
+```{r newMeanandMedian, echo=TRUE}
+stepsMean2 <- mean(plot3Data$steps)
+stepsMedian2 <- median(plot3Data$steps)
+
+paste("The mean total daily number of steps with replaced missing values is", stepsMean2)
+paste("The median total daily number of steps with replaced missing values is", stepsMedian2)
+
+
+```
+
+If I consider to compare the mean and median in question 1 as **mean2** and **median2** (took the steps number zero as "NA" when doing the calculation).  
+Then the mean didn't change, but the median has a very little change.
+```{r}
+paste("The mean in question 1 is", mean2)
+paste("The median in question 1 is", median2)
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
+
+1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+```{r week, echo=TRUE}
+#divide the days to weekends and weekdays
+newData$day <- weekdays(newData$date)
+for (i in 1:nrow(newData)){
+        if (newData[i, ]$day %in% c("Saturday", "Sunday")) {
+                newData[i, ]$day <- "weekend"
+        }else{
+                newData[i, ]$day <- "weekday"
+        }
+}
+
+#show the newData
+head(newData,6)
+```
+
+
+2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using simulated data:
+
+```{r plot4.png, echo=TRUE}
+plot4Data <- aggregate(steps~interval+day, data = newData, mean, na.rm = TRUE)
+
+#create and export the plot
+library(lattice)
+png("plot4.png")
+xyplot(steps~interval | day, plot4Data, type="l", layout=c(1,2), xlab = "Interval", ylab = "Average number of steps")
+dev.off()
+
+#to show the plot here
+xyplot(steps~interval | day, plot4Data, type="l", layout=c(1,2), xlab = "Interval", ylab = "Average number of steps")
+```
+

@@ -6,12 +6,88 @@ output: html_document
 ---
 ## Loading and preprocessing the data
 
+First, turn the warnings off
+
+```{r setoptions, echo=TRUE}
+library(knitr)
+opts_chunk$set(warning=FALSE)
+```
 
 
+1. Load the data (i.e. read.csv())
+
+```{r loadData, echo=TRUE}
+activity <- read.csv("activity.csv")
+names(activity)
+head(activity,6)
+```
+
+2. Process/transform the data (if necessary) into a format suitable for your analysis
+
+```{r transformData, echo=TRUE}
+activity$date <- as.POSIXct(activity$date, "%Y-%m%d")
+activity$weekday <- weekdays(activity$date)
+
+summary(activity)
+```
 
 ## What is mean total number of steps taken per day?
 
+For this part of the assignment, you can ignore the missing values in the dataset.
 
+```{r plot1Data, echo=TRUE}
+#subset the total steps and dates from activity
+plot1Data <- data.frame(tapply(activity$steps, activity$date, sum, na.rm=TRUE))
+names(plot1Data)[[1]] <- "Total steps"
+plot1Data$date <- rownames(plot1Data)
+rownames(plot1Data) <- NULL
+
+head(plot1Data,3)
+
+```
+
+1. Make a histogram of the total number of steps taken each day
+```{r plot1.png, echo=TRUE}
+#Histogram of total number of steps taken each day
+png("plot1.png")
+hist(plot1Data$`Total steps`, main = "Total Number of Steps Taken Per Day", xlab = "Total Steps", col = "steelblue", ylim = c(0,30))
+dev.off()
+
+#print plot1 here
+hist(plot1Data$`Total steps`, main = "Total Number of Steps Taken Per Day", xlab = "Total Steps", col = "steelblue", ylim = c(0,30))
+
+```
+
+**Note**: If you do not understand the difference between a histogram and a barplot, research the difference between them. (*Here is the barplot of total number of steps taken per day*)
+
+```{r plot1bar, echo=TRUE}
+#make a barplot using ggplot2 system
+library(ggplot2)
+png("plot1barplot.png", width = 1080, height = 480)
+g1 <- ggplot(aes(y = `Total steps`, x = date), data = plot1Data)
+g1 + geom_bar(stat = "identity") + ylab("Total Steps") + xlab("Date") + ggtitle("Total Number of Steps Taken Per Day")
+dev.off()
+
+#print the barplot here
+g1 + geom_bar(stat = "identity") + ylab("Total Steps") + xlab("Date")+ ggtitle("Total Number of Steps Taken Per Day")
+
+```
+
+
+2. Calculate and report the mean and median total number of steps taken per day
+
+Here are the mean and median total number of steps taken per day.
+
+```{r }
+#Calculate the mean and median
+stepsMean <- mean(plot1Data$`Total steps`)
+stepsMedian <- median(plot1Data$`Total steps`)
+
+#print the result
+paste("The mean of total number of steps taken per day is", stepsMean)
+paste("And the median of total number of steps taken per day is", stepsMedian)
+
+```
 
 ## What is the average daily activity pattern?
 

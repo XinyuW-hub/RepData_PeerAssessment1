@@ -10,7 +10,7 @@ First, turn the warnings off
 
 ```{r setoptions, echo=TRUE}
 library(knitr)
-opts_chunk$set(warning=FALSE)
+opts_chunk$set(warning = FALSE)
 ```
 
 
@@ -58,7 +58,8 @@ hist(plot1Data$`Total steps`, main = "Total Number of Steps Taken Per Day", xlab
 
 ```
 
-**Note**: If you do not understand the difference between a histogram and a barplot, research the difference between them. (*Here is the barplot of total number of steps taken per day*)
+**Note**: If you do not understand the difference between a histogram and a barplot, research the difference between them.  
+(*Here is the barplot of total number of steps taken per day*)
 
 ```{r plot1bar, echo=TRUE}
 #make a barplot using ggplot2 system
@@ -76,9 +77,10 @@ g1 + geom_bar(stat = "identity") + ylab("Total Steps") + xlab("Date")+ ggtitle("
 
 2. Calculate and report the mean and median total number of steps taken per day
 
-Here are the mean and median total number of steps taken per day.
+Here are the mean and median total number of steps taken per day.  
+**Note: I set the days that contain no steps as "0" instead of "NA" to calculate the mean and median.**
 
-```{r }
+```{r meanAndMedian, echo=TRUE}
 #Calculate the mean and median
 stepsMean <- mean(plot1Data$`Total steps`)
 stepsMedian <- median(plot1Data$`Total steps`)
@@ -89,9 +91,44 @@ paste("And the median of total number of steps taken per day is", stepsMedian)
 
 ```
 
+**Another situation: if I took zero steps as "NA"**
+
+```{r echo=TRUE}
+temp <- aggregate(steps~date, activity, sum)
+mean2 <- mean(temp$steps)
+median2 <- median(temp$steps)
+
+paste("If I took zero steps as NA to calculate the mean and median, then I will get", mean2, "as mean and", median2, "as median.")
+
+```
+
+
 ## What is the average daily activity pattern?
 
+1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
+```{r plot2.png, echo=TRUE}
+#Calculate the average number of steps taken
+
+plot2Data <- aggregate(steps~interval, activity, mean)
+
+#create and export plot2.png
+png("plot2.png", width = 720, height = 480)
+with(plot2Data, plot(interval, steps, type = "l", col = "steelblue", lwd = 1.5, xlab = "Interval", ylab = "Average Number of Steps", main = "Average Numbse of Steps Taken Per Interval"))
+dev.off()
+
+#print the plot2 here
+with(plot2Data, plot(interval, steps, type = "l", col = "steelblue", lwd = 1.5, xlab = "Interval", ylab = "Average Number of Steps", main = "Average Numbse of Steps Taken Per Interval"))
+```
+
+
+2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
+```{r findmax, echo=TRUE}
+intervalMax <- plot2Data[which.max(plot2Data$steps),]$interval
+
+paste("The interval", intervalMax, "contains the maximum number of steps")
+```
 
 ## Imputing missing values
 

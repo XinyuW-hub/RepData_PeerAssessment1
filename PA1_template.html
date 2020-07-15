@@ -368,9 +368,9 @@ summary {
 
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
-<p>First, turn the warnings off</p>
+<p>First, set the global options and turn the warnings off</p>
 <pre class="r"><code>library(knitr)
-opts_chunk$set(warning = FALSE)</code></pre>
+opts_chunk$set(fig.path=&quot;Figs/&quot;, warning = FALSE, message = FALSE, echo = TRUE)</code></pre>
 <ol style="list-style-type: decimal">
 <li>Load the data (i.e. read.csv())</li>
 </ol>
@@ -515,9 +515,7 @@ for(i in 1:nrow(newData)){
 <ol start="3" style="list-style-type: decimal">
 <li>Create a new dataset that is equal to the original dataset but with the missing data filled in.</li>
 </ol>
-<pre class="r"><code>opts_chunk$set(warning = FALSE)
-
-#show the new data generated above
+<pre class="r"><code>#show the new data generated above
 newData$date &lt;- as.POSIXct(newData$date, &quot;%Y-%m%d&quot;)
 head(newData,6)</code></pre>
 <pre><code>##       steps       date interval

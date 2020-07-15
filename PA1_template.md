@@ -6,12 +6,12 @@ output:
 ---
 ## Loading and preprocessing the data
 
-First, turn the warnings off
+First, set the global options and turn the warnings off
 
 
 ```r
 library(knitr)
-opts_chunk$set(warning = FALSE)
+opts_chunk$set(fig.path="Figs/", warning = FALSE, message = FALSE, echo = TRUE)
 ```
 
 
@@ -103,7 +103,7 @@ dev.off()
 hist(plot1Data$`Total steps`, main = "Total Number of Steps Taken Per Day", xlab = "Total Steps", col = "steelblue", ylim = c(0,30))
 ```
 
-![](PA1_template_files/figure-html/plot1.png-1.png)<!-- -->
+![](Figs/plot1.png-1.png)<!-- -->
 
 **Note**: If you do not understand the difference between a histogram and a barplot, research the difference between them.  
 (*Here is the barplot of total number of steps taken per day*)
@@ -128,7 +128,7 @@ dev.off()
 g1 + geom_bar(stat = "identity") + ylab("Total Steps") + xlab("Date")+ ggtitle("Total Number of Steps Taken Per Day")
 ```
 
-![](PA1_template_files/figure-html/plot1bar-1.png)<!-- -->
+![](Figs/plot1bar-1.png)<!-- -->
 
 
 2. Calculate and report the mean and median total number of steps taken per day
@@ -200,7 +200,7 @@ dev.off()
 with(plot2Data, plot(interval, steps, type = "l", col = "steelblue", lwd = 1.5, xlab = "Interval", ylab = "Average Number of Steps", main = "Average Numbse of Steps Taken Per Interval"))
 ```
 
-![](PA1_template_files/figure-html/plot2.png-1.png)<!-- -->
+![](Figs/plot2.png-1.png)<!-- -->
 
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -255,8 +255,6 @@ for(i in 1:nrow(newData)){
 
 
 ```r
-opts_chunk$set(warning = FALSE)
-
 #show the new data generated above
 newData$date <- as.POSIXct(newData$date, "%Y-%m%d")
 head(newData,6)
@@ -294,7 +292,7 @@ dev.off()
 hist(plot3Data$steps, col = "steelblue", xlab = "Total daily number of steps", main = "Histogram of Total Daily Number of Steps")
 ```
 
-![](PA1_template_files/figure-html/plot3.png-1.png)<!-- -->
+![](Figs/plot3.png-1.png)<!-- -->
 
 Here are the mean and median of the total daily number of steps.
 
@@ -392,4 +390,4 @@ dev.off()
 xyplot(steps~interval | day, plot4Data, type="l", layout=c(1,2), xlab = "Interval", ylab = "Average number of steps")
 ```
 
-![](PA1_template_files/figure-html/plot4.png-1.png)<!-- -->
+![](Figs/plot4.png-1.png)<!-- -->

@@ -1,16 +1,16 @@
 ---
-title: 'Reproducible Research: Peer Assessment 1'
-author: "Xinyu W"
-date: "7/14/2020"
-output: html_document
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
 ---
 ## Loading and preprocessing the data
 
-First, turn the warnings off
+First, set the global options and turn the warnings off
 
 ```{r setoptions, echo=TRUE}
 library(knitr)
-opts_chunk$set(warning = FALSE)
+opts_chunk$set(fig.path="Figs/", warning = FALSE, message = FALSE, echo = TRUE)
 ```
 
 
@@ -164,7 +164,6 @@ for(i in 1:nrow(newData)){
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 ```{r showNewData, echo=TRUE}
-opts_chunk$set(warning = FALSE)
 
 #show the new data generated above
 newData$date <- as.POSIXct(newData$date, "%Y-%m%d")
@@ -239,4 +238,3 @@ dev.off()
 #to show the plot here
 xyplot(steps~interval | day, plot4Data, type="l", layout=c(1,2), xlab = "Interval", ylab = "Average number of steps")
 ```
-
